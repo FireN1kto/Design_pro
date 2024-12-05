@@ -2,15 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% load bootstrap4 %}
+    {% load static %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='slim' %}
     <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
-    <title>Design.pro</title>
+    <title>{% block title %} Главная {% endblock %} - Design.pro</title>
 </head>
 <body>
     <header>
         <div class="nav-block">
             <h2>Design.pro</h2>
             <div class="navigation">
-                <a href="#">Профиль</a>
+                <a href="{% url 'AppDesign:index' %}">Главная</a>
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Профиль</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#">Мои заявки</a>
                     <div class="dropdown-divider"></div>
@@ -18,12 +24,20 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Удалить заявки</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Выйти</a>
+                    <div class="dropdown-divider"></div>
+                    <form action="{% url 'catalog:logout' %}" method="post"><div class="dropdown-divider"></div>
+                    <form action="{% url 'catalog:logout' %}" method="post">
+                        {% csrf_token %}<button class="dropdown-item" type="submit">Выйти</button>
+                    </form>
                 </div>
                 <a href="#">Регистрация</a>
-                <a href="#">Выход</a>
+                <a href="{% url 'catalog:login' %}">Вход</a>
             </div>
         </div>
     </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
 </html>
