@@ -1,17 +1,28 @@
-{% load bootstrap4 %}
-
-{% block title %} Вход {% endblock %}
-
+{% extends "layout/basic.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load bootstrap4 %}
+    {% load static %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='slim' %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+    <title>{% block title %} Вход {% endblock %}</title>
+</head>
+<body>
 {% block content %}
-  <h2>Вход</h2>
-  {% if user.is_authenticated %}
-    <p>Вы уже выполнили вход.</p>
-  {% else %}
-    <form method="post">
-      {% csrf_token %}
-      {% bootstrap_form form layout='horizontal' %}
-      <input type="hidden" name="next" value="{{ next }}">
-      {% buttons submit='Войти' %} {% endbuttons %}
-    </form>
-  {% endif %}
+  <main class="logout">
+    <h2>Вход</h2>
+    {% if user.is_authenticated %}
+      <p>Вы уже выполнили вход.</p>
+    {% else %}
+      <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form layout='horizontal' %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <input type="submit" value="Войти">
+      </form>
+    {% endif %}
+  </main>
 {% endblock %}

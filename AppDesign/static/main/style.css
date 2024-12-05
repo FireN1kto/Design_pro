@@ -17,8 +17,9 @@ body {
 .navigation {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     width: 40%;
+    gap: 5%;
 }
 
 .navigation > a {
@@ -36,6 +37,28 @@ body {
 
 main {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     margin-top: 5%;
+    width: 50%;
+    margin-left: 25%;
+}
+
+main > form > input[type="submit"] {
+    display: block;
+    background: black;
+    width: 30%;
+    height: 30px;
+    color: white;
+    border-radius:8px;
+    font-weight: bold;
+    border: none;
+}
+
+main > form > input[type="submit"]:hover {
+    background: #32982F;
+}
+
+main > form > input[type="submit"]:active {
+    background: #32982F;
+    color: black;
 }
