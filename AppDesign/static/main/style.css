@@ -19,7 +19,7 @@ body {
     align-items: center;
     justify-content: flex-end;
     width: 40%;
-    gap: 5%;
+    gap: 10%;
 }
 
 .navigation > a {
@@ -52,6 +52,7 @@ main > form > input[type="submit"] {
     border-radius:8px;
     font-weight: bold;
     border: none;
+    transition: background,color 0.2s ease-in;
 }
 
 main > form > input[type="submit"]:hover {

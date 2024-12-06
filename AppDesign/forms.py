@@ -2,10 +2,18 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from .models import AdvUser
+from .validators import validate_cyrillic
 
 from .models import user_registrated
 
 class RegisterUserForm(forms.ModelForm):
+    full_name = forms.CharField(
+        required=True,
+        label='Ф.И.О.',
+        validators=[validate_cyrillic],
+        widget=forms.TextInput()
+    )
+    login = forms.CharField(required=True, widget=forms.TextInput(), label="Ваш логин")
     email = forms.EmailField(required=True, label='Адрес электронной почты')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput, help_text=password_validation.password_validators_help_text_html())
     password2 = forms.CharField(label='Пароль (повторно)', widget=forms.PasswordInput, help_text='Повторите тот же самый пароль еще раз')
@@ -29,6 +37,8 @@ class RegisterUserForm(forms.ModelForm):
         user.set_password(self.cleaned_data['password1'])
         user.is_active = True
         user.is_activated = True
+        user.login = self.cleaned_data['login']
+        user.full_name = self.cleaned_data['full_name']
         if commit:
             user.save()
             user_registrated.send(RegisterUserForm, instance=user)
@@ -36,6 +46,5 @@ class RegisterUserForm(forms.ModelForm):
 
     class Meta:
         model = AdvUser
-        fields = ('username', 'email', 'password1', 'password2',
-              'first_name', 'last_name', 'send_messages')
+        fields = ('full_name','login', 'email', 'password1', 'password2', 'send_messages')
 

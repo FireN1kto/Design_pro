@@ -12,15 +12,15 @@ from django.views.generic.base import TemplateView
 def index(request):
     return render(request, 'catalog/index.html')
 
+@login_required
+def profile(request):
+    return render(request, 'catalog/profile.html')
+
 class login(LoginView):
     template_name = 'catalog/login.html'
 
 class logout(LoginRequiredMixin, LogoutView):
     template_name = 'catalog/logout.html'
-
-@login_required
-def profile(request):
-    return render(request, 'catalog/profile.html')
 
 class RegisterUserView(CreateView):
     model = AdvUser
