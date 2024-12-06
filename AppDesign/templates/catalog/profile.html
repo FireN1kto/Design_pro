@@ -1,16 +1,9 @@
 {% extends "layout/basic.html" %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% load bootstrap4 %}
-    {% load static %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript jquery='slim' %}
-    <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
-    <title>{% block title %} Профиль пользователя {% endblock %}</title>
-</head>
-<body>
+
+{% load bootstrap4 %}
+
+{% block title %} Профиль пользователя {% endblock %}
+
 {% block content %}
     <h2>Профиль пользователя {{ user.username }}</h2>
     {% if user.first_name and user.last_name %}
