@@ -18,12 +18,6 @@ class RegisterUserForm(forms.ModelForm):
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput, help_text=password_validation.password_validators_help_text_html())
     password2 = forms.CharField(label='Пароль (повторно)', widget=forms.PasswordInput, help_text='Повторите тот же самый пароль еще раз')
 
-    def clean_password1(self):
-        password1 = self.cleaned_data['password1']
-        if password1:
-            password_validation.validate_password(password1)
-        return password1
-
     def clean(self):
         super().clean()
         password1 = self.cleaned_data['password1']
@@ -35,8 +29,8 @@ class RegisterUserForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        user.is_active = True
-        user.is_activated = True
+        user.is_active = False
+        user.is_activated = False
         user.login = self.cleaned_data['login']
         user.full_name = self.cleaned_data['full_name']
         if commit:
