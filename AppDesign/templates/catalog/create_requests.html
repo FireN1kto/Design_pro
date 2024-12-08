@@ -1,0 +1,22 @@
+{% extends "layout/basic.html" %}
+
+{% load bootstrap4 %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+
+{% block title %} Создание заявки {% endblock %}
+
+{% block content %}
+    <h2>Создание заявки на дизайн интерьера</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Создать заявку">
+    </form>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
-from .models import AdvUser
+from .models import AdvUser, InteriorDesignRequest
 from .validators import validate_cyrillic
 
 from .models import user_registrated
@@ -42,3 +42,19 @@ class RegisterUserForm(forms.ModelForm):
         model = AdvUser
         fields = ('full_name','login', 'email', 'password1', 'password2', 'send_messages')
 
+
+class InteriorDesignRequestForm(forms.ModelForm):
+    class Meta:
+        model = InteriorDesignRequest
+        fields = ['name', 'email', 'phone', 'project_description', 'design_image']
+        widgets = {
+            'project_description': forms.Textarea(attrs={'rows': 4}),
+        }
+
+        def clean_design_image(self):
+            image = self.cleaned_data.get('design_image')
+            if image:
+                if image.size > 2 * 1024 * 1024:  # 2 MB
+                    raise ValidationError('Размер изображения не должен превышать 2 Мб.')
+                return image
+            raise forms.ValidationError("Необходимо загрузить изображение.")

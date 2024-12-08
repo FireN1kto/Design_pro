@@ -11,4 +11,22 @@
     {% else %}
         <p>Здравствуйте! </p>
     {% endif %}
+    <h3>Ваши заявки:</h3>
+    <div>
+        {% for request in user_requests %}
+            <div>
+                <div class="request-card">
+                    <div class="request-header">{{ request.name }} (Автор: {{ request.user.username }})</div>
+                    <div class="request-discription">Описание: {{ request.project_description }}</div>
+                    <div class="request-status">Статус: {{ request.status }}</div>
+                    <div class="request-date">Дата создания: {{ request.created_at }}</div>
+                </div>
+                {% if request.design_image %}
+                    <div class="request-image"><img src="{{request.design_image.url}}" alt="Изображение помещения"></div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Заявок пока что нет.</p>
+        {% endfor %}
+    </div>
 {% endblock %}

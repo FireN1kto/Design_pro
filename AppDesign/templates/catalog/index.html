@@ -1,5 +1,23 @@
 {% extends "layout/basic.html" %}
-
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% block content %}
-<h2>Заявок пока что нет</h2>
+<div>
+    {% for request in requests %}
+        <div>
+            <div class="request-card">
+                <div class="request-header">{{ request.name }} (Автор: {{ request.user.username }})</div>
+                <div class="request-discription">Описание: {{ request.project_description }}</div>
+                <div class="request-status">Статус: {{ request.status }}</div>
+                <div class="request-date">Дата создания: {{ request.created_at }}</div>
+            </div>
+            {% if request.design_image %}
+                <div class="request-image"><img src="{{request.design_image.url}}" alt="Изображение помещения"></div>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Заявок пока что нет.</p>
+    {% endfor %}
+</div>
+
 {% endblock %}

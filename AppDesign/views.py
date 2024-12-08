@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
-from .forms import RegisterUserForm
-from .models import AdvUser
+from .forms import RegisterUserForm, InteriorDesignRequestForm
+from .models import AdvUser, InteriorDesignRequest
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.shortcuts import get_object_or_404
@@ -13,11 +13,13 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 
 def index(request):
-    return render(request, 'catalog/index.html')
+    requests = InteriorDesignRequest.objects.all()
+    return render(request, 'catalog/index.html', {'requests': requests})
 
 @login_required
 def profile(request):
-    return render(request, 'catalog/profile.html')
+    user_requests = InteriorDesignRequest.objects.filter(user=request.user)
+    return render(request, 'catalog/profile.html', {'user_requests': user_requests})
 
 class login(LoginView):
     template_name = 'catalog/login.html'
@@ -65,6 +67,20 @@ def login_view(request):
             auth_login(request, user)
             user.has_logged_in = True
             user.save()
-            return redirect('catalog/index')  # Перенаправление на главную страницу или другую страницу
+            return redirect('catalog/index')
 
-    return render(request, 'login.html')  # Ваш шаблон для входа
+    return render(request, 'login.html')
+
+def create_request(request):
+    if request.method == 'POST':
+        form = InteriorDesignRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            request_instance = form.save(commit=False)
+            request_instance.user = request.user
+            request_instance.save()
+            messages.success(request, 'Ваша заявка успешно отправлена!')
+            return redirect('catalog:profile')
+    else:
+        form = InteriorDesignRequestForm()
+
+    return render(request, 'catalog/create_requests.html', {'form': form})

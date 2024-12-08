@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, login, profile, logout, RegisterDoneView, RegisterUserView, activate_user
+from .views import index, login, profile, logout, RegisterDoneView, RegisterUserView, activate_user, create_request
 
 app_name = 'AppDesign'
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('accounts/register/done/', RegisterDoneView.as_view(), name='register_done'),
     path('accounts/register/', RegisterUserView.as_view(), name='register'),
     path('accounts/register/activate/', activate_user, name='activate'),
+    path('create-request', create_request, name='create_requests'),
 ]
