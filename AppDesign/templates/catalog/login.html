@@ -1,17 +1,23 @@
 {% extends "layout/basic.html" %}
-{% load bootstrap4 %}
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
-
-{% block title %} Вход {% endblock %}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load bootstrap4 %}
+    {% load static %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='slim' %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+    <title>{% block title %} Вход {% endblock %}</title>
+</head>
+<body>
 {% block content %}
   <main class="logout">
     <h2>Вход</h2>
     {% if user.is_authenticated %}
       <p>Вы уже выполнили вход.</p>
     {% else %}
-      <form method="post" action="{% url 'catalog:login' %}">
+      <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout='horizontal' %}
         <input type="hidden" name="next" value="{{ next }}">

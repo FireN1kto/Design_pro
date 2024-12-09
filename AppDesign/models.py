@@ -6,18 +6,17 @@ from django.core.exceptions import ValidationError
 user_registrated = Signal()
 
 class AdvUser(AbstractUser):
-    STATUS_CHOICES = [
-        ('offline', 'Не живой'),
-        ('online', 'Живой'),
-    ]
     is_activated = models.BooleanField(default=True, db_index=True, verbose_name='Прошел активацию?')
     send_messages = models.BooleanField(default=True, verbose_name='Оповещать при новых комментариях?')
     login = models.CharField(max_length=150, unique=True, null=True)
     full_name = models.CharField(max_length=150, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='offline')
+    has_logged_in = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.username
+    def activation_status(self):
+        if self.is_activated:
+            return "Активный" if self.has_logged_in else "Неактивный"
+        return "Неактивен"
+
 
     class Meta(AbstractUser.Meta):
         pass
