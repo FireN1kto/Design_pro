@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
-from .models import AdvUser
+from .models import AdvUser, InteriorDesignRequest, Category
 from .validators import validate_cyrillic
 
 from .models import user_registrated
@@ -42,3 +42,29 @@ class RegisterUserForm(forms.ModelForm):
         model = AdvUser
         fields = ('full_name','login', 'email', 'password1', 'password2', 'send_messages')
 
+class InteriorDesignRequestForm(forms.ModelForm):
+    new_category = forms.CharField(max_length=100, required=False, label="Категория")
+
+    class Meta:
+        model = InteriorDesignRequest
+        fields = ['name','email', 'phone', 'project_description', 'design_image', 'new_category']
+        widgets = {
+            'project_description': forms.Textarea(attrs={'rows': 4}),
+        }
+
+    def clean_new_category(self):
+        category_name = self.cleaned_data.get('new_category')
+        if category_name:
+            category, created = Category.objects.get_or_create(name=category_name)
+            return category
+        return None
+
+    def clean_design_image(self):
+        image = self.cleaned_data.get('design_image')
+        if image:
+            if image.size > 2 * 1024 * 1024:  # 2 MB
+                raise ValidationError('Размер изображения не должен превышать 2 Мб.')
+            if not image.name.endswith(('.jpg', '.jpeg', '.png', '.bmp')):
+                raise ValidationError('Неподдерживаемый формат файла. Используйте jpg, jpeg, png или bmp.')
+            return image
+        raise forms.ValidationError("Необходимо загрузить изображение.")

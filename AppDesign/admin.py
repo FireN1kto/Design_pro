@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import AdvUser
+from .models import AdvUser, InteriorDesignRequest, Category
+
 
 class AdvUserAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'username', 'login', 'email', 'activation_status')
@@ -12,3 +13,5 @@ class AdvUserAdmin(admin.ModelAdmin):
     activation_status.short_description = 'Статус'
 
 admin.site.register(AdvUser, AdvUserAdmin)
+admin.site.register(InteriorDesignRequest)
+admin.site.register(Category)
