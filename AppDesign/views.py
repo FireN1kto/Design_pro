@@ -10,10 +10,11 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
 
 def index(request):
     requests = InteriorDesignRequest.objects.all()
+    if not request.user.is_authenticated:
+        requests = []
     return render(request, 'catalog/index.html', {'requests': requests})
 
 @login_required
@@ -23,6 +24,13 @@ def profile(request):
 
 class login(LoginView):
     template_name = 'catalog/login.html'
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = form.get_user()
+        user.status = 'online'
+        user.save()
+        return response
+
 
 class logout(LoginRequiredMixin, LogoutView):
     template_name = 'catalog/logout.html'
@@ -55,21 +63,6 @@ def activate_user(request, user_id):
     user.save()
     messages.success(request, f'Пользователь {user.username} успешно активирован!')
     return redirect('admin:index')
-
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            auth_login(request, user)
-            user.has_logged_in = True
-            user.save()
-            return redirect('catalog/index')  # Перенаправление на главную страницу или другую страницу
-
-    return render(request, 'login.html')  # Ваш шаблон для входа
 
 def create_request(request):
     if request.method == 'POST':
