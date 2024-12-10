@@ -11,6 +11,11 @@
     {% else %}
         <p>Здравствуйте! </p>
     {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
     <h3>Ваши заявки:</h3>
     <div>
         {% for request in user_requests %}
