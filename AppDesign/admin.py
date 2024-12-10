@@ -3,14 +3,9 @@ from .models import AdvUser, InteriorDesignRequest, Category
 
 
 class AdvUserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'username', 'login', 'email', 'activation_status')
+    list_display = ('full_name', 'username', 'login', 'email', 'status')
 
     list_filter = ('is_activated',)
-
-    def activation_status(self, obj):
-        return obj.activation_status()
-
-    activation_status.short_description = 'Статус'
 
 admin.site.register(AdvUser, AdvUserAdmin)
 admin.site.register(InteriorDesignRequest)

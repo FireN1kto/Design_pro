@@ -2,25 +2,28 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% block content %}
-<div>
-    {% for request in requests %}
-        <div>
-            <div class="request-card">
-                <h3 class="request-header">{{ request.name }} (Автор: {{ request.user.username }})</h3>
-                <div>
-                    <p class="request-description"><span>Описание</span>: {{ request.project_description }}</p>
+{% if request.user.is_authenticated %}
+    <div>
+        {% for request in requests %}
+            <div>
+                <div class="request-card">
+                    <h3 class="request-header">{{ request.name }} (Автор: {{ request.user.username }})</h3>
+                    <div>
+                        <p class="request-description"><span>Описание</span>: {{ request.project_description }}</p>
+                    </div>
+                    <p class="request-category"><span>Категория</span>: {{request.category.name}}</p>
+                    <p class="request-status"><span>Статус</span>: {{ request.status }}</p>
+                    <p class="request-date"><span>Дата создания</span>: {{ request.created_at }}</p>
                 </div>
-                <p class="request-category"><span>Категория</span>: {{request.category.name}}</p>
-                <p class="request-status"><span>Статус</span>: {{ request.status }}</p>
-                <p class="request-date"><span>Дата создания</span>: {{ request.created_at }}</p>
+                {% if request.design_image %}
+                    <div class="request-image"><img src="{{request.design_image.url}}" alt="Изображение помещения"></div>
+                {% endif %}
             </div>
-            {% if request.design_image %}
-                <div class="request-image"><img src="{{request.design_image.url}}" alt="Изображение помещения"></div>
-            {% endif %}
-        </div>
-    {% empty %}
-        <h2>Заявок пока что нет.</h2>
-    {% endfor %}
-</div>
-
+        {% empty %}
+            <h2>Заявок пока что нет.</h2>
+        {% endfor %}
+    </div>
+{% else %}
+    <h2>Вы должны войти в свой аккаунт, чтобы видеть заявки.</h2>
+{% endif %}
 {% endblock %}
