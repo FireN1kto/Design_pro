@@ -23,7 +23,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'catalog:create_requests' %}">Создать заявки</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Удалить заявки</a>
+                        <a class="dropdown-item" href="{% url 'catalog:delete_request' %}">Удалить заявки</a>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-divider"></div>
                         <form action="{% url 'catalog:logout' %}" method="post"><div class="dropdown-divider"></div>

@@ -67,6 +67,16 @@ main > form > input[type="submit"]:active {
 main > div > div {
     display: flex;
     margin-top: 10%;
+    margin-bottom: 5%;
+    border-radius: 30px;
+    border: solid 2px black;
+    box-shadow: 10px -10px 100px black;
+}
+
+.delete {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
     border-radius: 30px;
     border: solid 2px black;
     box-shadow: 10px -10px 100px black;
@@ -123,4 +133,18 @@ main > div > div {
     height: 400px;
     border-radius: 40px;
     padding: 20px
+}
+
+.delete > form > input[type="submit"] {
+    display: block;
+    background: black;
+    margin-left: 35%;
+    margin-bottom: 1%;
+    width: 30%;
+    height: 30px;
+    color: white;
+    border-radius:8px;
+    font-weight: bold;
+    border: none;
+    transition: background,color 0.2s ease-in;
 }

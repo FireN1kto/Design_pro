@@ -24,10 +24,17 @@ def profile(request):
 class login(LoginView):
     template_name = 'catalog/login.html'
     def form_valid(self, form):
-        response = super().form_valid(form)
         user = form.get_user()
+        if not user.is_active:
+            messages.warning(self.request, "Ваш аккаунт не активирован. Ожидайте активации от администратора.")
+            return self.get(form)
+
+        response = super().form_valid(form)
         user.status = 'online'
         user.save()
+        if 'registration_message' in self.request.session:
+            messages.success(self.request, self.request.session['registration_message'])
+            del self.request.session['registration_message']
         return response
 
 class logout(LoginRequiredMixin, LogoutView):
@@ -38,16 +45,15 @@ class RegisterUserView(CreateView):
     model = AdvUser
     template_name = 'catalog/register_user.html'
     form_class = RegisterUserForm
-    success_url = reverse_lazy('catalog:register_done')
+    success_url = reverse_lazy('catalog:login')
 
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
         user.is_activated = False
-        user.has_logged_in = False
         user.save()
 
-        messages.success(self.request, 'Вы успешно зарегистрированы! Ожидайте активации от администратора.')
+        self.request.session['registration_message'] = 'Вы успешно зарегистрированы! Ожидайте активации от администратора.'
 
         return super().form_valid(form)
 
@@ -63,6 +69,9 @@ def activate_user(request, user_id):
     return redirect('admin:index')
 
 def create_request(request):
+    if not request.user.is_active:
+        messages.error(request, "Вы не можете создавать заявки до активации.")
+        return redirect('catalog:profile')
     if request.method == 'POST':
         form = InteriorDesignRequestForm(request.POST, request.FILES)
         if form.is_valid():
@@ -76,3 +85,14 @@ def create_request(request):
         form = InteriorDesignRequestForm()
 
     return render(request, 'catalog/create_requests.html', {'form': form})
+
+def delete_request(request):
+    user_requests = InteriorDesignRequest.objects.filter(user=request.user)
+    if request.method == 'POST':
+        request_id = request.POST.get('request_id')
+        request_instance = get_object_or_404(InteriorDesignRequest, id=request_id, user=request.user)
+        request_instance.delete()
+        messages.success(request, "Заявка успешно удалена.")
+        return redirect('catalog:profile')
+
+    return render(request, 'catalog/delete_request.html', {'user_requests': user_requests})

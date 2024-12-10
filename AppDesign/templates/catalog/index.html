@@ -2,6 +2,11 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 {% if request.user.is_authenticated %}
     <div>
         {% for request in requests %}
