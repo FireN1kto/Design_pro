@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffc4c150-cad6-480c-8079-50884a95d362" name="Changes" comment="Исправил доступ админра к данным в панели администрирования и сделал страницу удаления заявки">
+    <list default="true" id="ffc4c150-cad6-480c-8079-50884a95d362" name="Changes" comment="Сделал запрет для администратора на создание и удаление заявок">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AppDesign/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppDesign/static/main/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/static/main/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppDesign/templates/catalog/delete_request.html" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/templates/catalog/delete_request.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppDesign/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppDesign/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AppDesign/templates/catalog/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/templates/catalog/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AppDesign/templates/layout/basic.html" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/templates/layout/basic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AppDesign/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AppDesign/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/AppDesign/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
@@ -53,31 +53,31 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2q0L6xNeZ2IOuPelR2krhuWxW86" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "Main2.2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Main2.2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Design_pro" type="Python.DjangoServer" factoryName="Django server">
       <module name="Design_pro" />
@@ -120,7 +120,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1733794375702</updated>
-      <workItem from="1733794377131" duration="13782000" />
+      <workItem from="1733794377131" duration="15080000" />
+      <workItem from="1733811278177" duration="2530000" />
+      <workItem from="1733813827767" duration="5000" />
+      <workItem from="1733880764077" duration="16114000" />
     </task>
     <task id="LOCAL-00001" summary="Доделал статус 'живой'/'неживой' у пользователя">
       <option name="closed" value="true" />
@@ -138,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733803317036</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Сделал запрет для администратора на создание и удаление заявок">
+      <option name="closed" value="true" />
+      <created>1733809957910</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1733809957910</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,6 +169,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Доделал статус 'живой'/'неживой' у пользователя" />
     <MESSAGE value="Исправил доступ админра к данным в панели администрирования и сделал страницу удаления заявки" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправил доступ админра к данным в панели администрирования и сделал страницу удаления заявки" />
+    <MESSAGE value="Сделал запрет для администратора на создание и удаление заявок" />
+    <option name="LAST_COMMIT_MESSAGE" value="Сделал запрет для администратора на создание и удаление заявок" />
   </component>
 </project>

@@ -3,11 +3,11 @@ from .models import AdvUser, InteriorDesignRequest, Category
 
 
 class AdvUserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'username', 'login', 'email', 'status')
+    list_display = ('full_name', 'username', 'email', 'status')
 
     list_filter = ('is_activated',)
 
-    readonly_fields = ('username', 'full_name','first_name', 'last_name', 'login', 'date_joined')
+    readonly_fields = ('username', 'full_name','first_name', 'last_name', 'date_joined')
 
     def has_add_permission(self, request):
         return False
