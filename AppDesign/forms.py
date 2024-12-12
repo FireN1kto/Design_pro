@@ -29,13 +29,13 @@ class RegisterUserForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        user.is_active = True
-        user.is_activated = True
+        user.is_active = False
+        user.is_activated = False
         user.login = self.cleaned_data['login']
         user.full_name = self.cleaned_data['full_name']
         if commit:
             user.save()
-        user_registrated.send(RegisterUserForm, instance=user)
+            user_registrated.send(RegisterUserForm, instance=user)
         return user
 
     class Meta:
@@ -44,11 +44,10 @@ class RegisterUserForm(forms.ModelForm):
 
 class InteriorDesignRequestForm(forms.ModelForm):
     new_category = forms.CharField(max_length=100, required=False, label="Категория")
-    is_urgent = forms.BooleanField(required=False, label='Срочность')
 
     class Meta:
         model = InteriorDesignRequest
-        fields = ['name','email', 'phone', 'project_description', 'design_image', 'new_category', 'is_urgent']
+        fields = ['name','email', 'phone', 'project_description', 'design_image', 'new_category']
         widgets = {
             'project_description': forms.Textarea(attrs={'rows': 4}),
         }

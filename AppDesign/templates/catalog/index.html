@@ -19,7 +19,6 @@
                     <p class="request-category"><span>Категория</span>: {{request.category.name}}</p>
                     <p class="request-status"><span>Статус</span>: {{ request.status }}</p>
                     <p class="request-date"><span>Дата создания</span>: {{ request.created_at }}</p>
-                    <p class="request-urgent"><span>Срочный</span>: {{ request.is_urgent }}</p>
                 </div>
                 {% if request.design_image %}
                     <div class="request-image"><img src="{{request.design_image.url}}" alt="Изображение помещения"></div>
