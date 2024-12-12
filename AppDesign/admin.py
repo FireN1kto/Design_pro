@@ -9,9 +9,6 @@ class AdvUserAdmin(admin.ModelAdmin):
 
     readonly_fields = ('username', 'full_name','first_name', 'last_name', 'login', 'date_joined')
 
-    def has_add_permission(self, request):
-        return False
-
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return self.readonly_fields + ('email',)

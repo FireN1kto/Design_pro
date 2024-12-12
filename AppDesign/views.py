@@ -16,20 +16,15 @@ def index(request):
     if not request.user.is_authenticated:
         requests = []
     return render(request, 'catalog/index.html', {'requests': requests})
-
+@login_required
 def profile(request):
     user_requests = InteriorDesignRequest.objects.filter(user=request.user)
     return render(request, 'catalog/profile.html', {'user_requests': user_requests})
 
 class login(LoginView):
     template_name = 'catalog/login.html'
-
     def form_valid(self, form):
         user = form.get_user()
-        if not user.is_active:
-            messages.warning(self.request, "Ваш аккаунт не активирован. Ожидайте активации от администратора.")
-            return self.get(form)
-
         response = super().form_valid(form)
         user.status = 'online'
         user.save()
@@ -70,18 +65,9 @@ def activate_user(request, user_id):
     return redirect('admin:index')
 
 def create_request(request):
-    if request.user.is_staff:
-        messages.error(request, "Администраторы не могут создавать заявки.")
-        return redirect('catalog:profile')
-
     if not request.user.is_active:
         messages.error(request, "Вы не можете создавать заявки до активации.")
         return redirect('catalog:profile')
-
-    if not request.user.is_active:
-        messages.error(request, "Вы не можете создавать заявки до активации.")
-        return redirect('catalog:profile')
-
     if request.method == 'POST':
         form = InteriorDesignRequestForm(request.POST, request.FILES)
         if form.is_valid():
@@ -98,10 +84,6 @@ def create_request(request):
 
 def delete_request(request):
     user_requests = InteriorDesignRequest.objects.filter(user=request.user)
-    if request.user.is_staff:
-        messages.error(request, "Администраторы не могут удалять заявки.")
-        return redirect('catalog:profile')
-
     if request.method == 'POST':
         request_id = request.POST.get('request_id')
         request_instance = get_object_or_404(InteriorDesignRequest, id=request_id, user=request.user)

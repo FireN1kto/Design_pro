@@ -3,6 +3,13 @@
 {% block title %} Регистрация завершена {% endblock %}
 
 {% block content %}
-    <h2>Регистрация</h2>
-    <p>Регистрация пользователя завершена</p>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+    {% else %}
+        <h2>Регистрация</h2>
+        <p>Регистрация пользователя завершена</p>
+        <p>Вы активированы администратором</p>
+    {% endif %}
 {% endblock %}

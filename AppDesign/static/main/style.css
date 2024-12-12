@@ -70,7 +70,7 @@ main > div > div {
     margin-bottom: 5%;
     border-radius: 30px;
     border: solid 2px black;
-    box-shadow: 10px -10px 40px black, -10px 10px 40px black;
+    box-shadow: 10px -10px 100px black;
 }
 
 .delete {
@@ -79,7 +79,7 @@ main > div > div {
     margin-top: 10%;
     border-radius: 30px;
     border: solid 2px black;
-    box-shadow: 10px -10px 40px black, -10px 10px 40px black;
+    box-shadow: 10px -10px 100px black;
 }
 
 .request-card > div {
@@ -147,41 +147,4 @@ main > div > div {
     font-weight: bold;
     border: none;
     transition: background,color 0.2s ease-in;
-}
-
-.dropdown-menu {
-    text-align: center;
-    background: black;
-}
-
-.dropdown-menu > a {
-    background: black;
-    color: #32982F;
-    font-weight: bold;
-}
-
-.dropdown-menu > a:hover {
-    background: #32982F;
-    color: black;
-}
-
-.dropdown-menu > a:active {
-    background: black;
-    color: white;
-}
-
-.dropdown-menu > form > button[type="submit"] {
-    background: black;
-    color: #32982F;
-    font-weight: bold;
-}
-
-.dropdown-menu > form > button[type="submit"]:hover {
-    background: #32982F;
-    color: black;
-}
-
-.dropdown-menu > form > button[type="submit"]:active {
-    background: black;
-    color: white;
 }
