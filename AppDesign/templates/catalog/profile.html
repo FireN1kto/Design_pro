@@ -21,7 +21,7 @@
         {% for request in user_requests %}
             <div>
                 <div class="request-card">
-                    <h3 class="request-header">{{ request.name }}</h3>
+                    <h3 class="request-header">{{ request.name }} (Автор: {{ request.user.username }})</h3>
                     <div>
                         <p class="request-description"><span>Описание</span>: {{ request.project_description }}</p>
                     </div>

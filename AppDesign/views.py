@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
@@ -20,19 +21,22 @@ def profile(request):
     user_requests = InteriorDesignRequest.objects.filter(user=request.user)
     return render(request, 'catalog/profile.html', {'user_requests': user_requests})
 
-
 class login(LoginView):
     template_name = 'catalog/login.html'
+
     def form_valid(self, form):
         user = form.get_user()
-        user.status = 'online'
-        user.is_activated = True
-        user.save()
+        if not user.is_active:
+            messages.warning(self.request, "Ваш аккаунт не активирован. Ожидайте активации от администратора.")
+            return self.get(form)
 
+        response = super().form_valid(form)
+        user.status = 'online'
+        user.save()
         if 'registration_message' in self.request.session:
             messages.success(self.request, self.request.session['registration_message'])
             del self.request.session['registration_message']
-        return super().form_valid(form)
+        return response
 
 class logout(LoginRequiredMixin, LogoutView):
     template_name = 'catalog/logout.html'
@@ -45,17 +49,25 @@ class RegisterUserView(CreateView):
     success_url = reverse_lazy('catalog:login')
 
     def form_valid(self, form):
-        user = form.save()
+        user = form.save(commit=False)
         user.is_active = False
-        user.is_activated = True
+        user.is_activated = False
         user.save()
 
-        self.request.session['registration_message'] = 'Вы успешно зарегистрированы!'
+        self.request.session['registration_message'] = 'Вы успешно зарегистрированы! Ожидайте активации от администратора.'
 
         return super().form_valid(form)
 
 class RegisterDoneView(TemplateView):
     template_name = 'catalog/register_done.html'
+
+def activate_user(request, user_id):
+    user = get_object_or_404(AdvUser, id=user_id)
+    user.is_activated = True
+    user.is_active = True
+    user.save()
+    messages.success(request, f'Пользователь {user.username} успешно активирован!')
+    return redirect('admin:index')
 
 def create_request(request):
     if request.user.is_staff:

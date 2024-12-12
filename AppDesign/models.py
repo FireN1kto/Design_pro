@@ -10,14 +10,16 @@ class AdvUser(AbstractUser):
         ('offline', 'Не живой'),
         ('online', 'Живой'),
     ]
-    is_activated = models.BooleanField(default=False, verbose_name='Прошел активацию?')
+    is_activated = models.BooleanField(default=True, db_index=True, verbose_name='Прошел активацию?')
     send_messages = models.BooleanField(default=True, verbose_name='Оповещать при новых комментариях?')
-    username = models.CharField(max_length=150, unique=True, null=True, verbose_name="Имя пользователя")
+    login = models.CharField(max_length=150, unique=True, null=True)
     full_name = models.CharField(max_length=150, null=True, verbose_name="Ф.И.О")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='offline')
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.username if self.username is not None else "Без имени"
+        return self.username
+
 
     class Meta(AbstractUser.Meta):
         pass
@@ -25,8 +27,6 @@ class AdvUser(AbstractUser):
 def validate_image(image):
     if image.size > 2 * 1024 * 1024:  # 2 MB
         raise ValidationError('Размер изображения не должен превышать 2 Мб.')
-    if not image.name.endswith(('.jpg', '.jpeg', '.png', '.bmp')):
-        raise ValidationError('Неподдерживаемый формат файла. Используйте jpg, jpeg, png или bmp.')
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
