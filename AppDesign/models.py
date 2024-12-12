@@ -10,13 +10,14 @@ class AdvUser(AbstractUser):
         ('offline', 'Не живой'),
         ('online', 'Живой'),
     ]
+    is_activated = models.BooleanField(default=False, verbose_name='Прошел активацию?')
     send_messages = models.BooleanField(default=True, verbose_name='Оповещать при новых комментариях?')
-    login = models.CharField(max_length=150, unique=True,verbose_name="Имя пользователя")
+    username = models.CharField(max_length=150, unique=True, null=True, verbose_name="Имя пользователя")
     full_name = models.CharField(max_length=150, null=True, verbose_name="Ф.И.О")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='offline', verbose_name='Статус')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='offline')
 
     def __str__(self):
-        return self.login if self.login is not None else "Без имени"
+        return self.username if self.username is not None else "Без имени"
 
     class Meta(AbstractUser.Meta):
         pass
@@ -45,7 +46,6 @@ class InteriorDesignRequest(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Новая', verbose_name="Статус")
     user = models.ForeignKey(AdvUser ,on_delete=models.CASCADE)
-    is_urgent = models.BooleanField(default=False, verbose_name='Срочность')
 
     def __str__(self):
         return f"Заявка от {self.name}, Статус {self.status}"
