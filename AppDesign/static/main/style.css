@@ -70,7 +70,7 @@ main > div > div {
     margin-bottom: 5%;
     border-radius: 30px;
     border: solid 2px black;
-    box-shadow: 10px -10px 40px black, -10px 10px 40px black;
+    box-shadow: 10px -10px 40px rgba(0, 0, 0, 0.25), -10px 10px 40px rgba(0, 0, 0, 0.25);
 }
 
 .delete {
@@ -125,6 +125,14 @@ main > div > div {
 }
 
 .request-date {
+    padding-left: 20px;
+}
+
+.request-urgent > span {
+    font-weight: bold;
+}
+
+.request-urgent {
     padding-left: 20px;
 }
 

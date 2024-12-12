@@ -1,6 +1,7 @@
+from django.contrib.auth.decorators import login_required
+from django.db.transaction import commit
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
@@ -17,26 +18,19 @@ def index(request):
         requests = []
     return render(request, 'catalog/index.html', {'requests': requests})
 
+@login_required
 def profile(request):
     user_requests = InteriorDesignRequest.objects.filter(user=request.user)
     return render(request, 'catalog/profile.html', {'user_requests': user_requests})
 
+
 class login(LoginView):
     template_name = 'catalog/login.html'
-
     def form_valid(self, form):
         user = form.get_user()
-        if not user.is_active:
-            messages.warning(self.request, "Ваш аккаунт не активирован. Ожидайте активации от администратора.")
-            return self.get(form)
-
-        response = super().form_valid(form)
         user.status = 'online'
         user.save()
-        if 'registration_message' in self.request.session:
-            messages.success(self.request, self.request.session['registration_message'])
-            del self.request.session['registration_message']
-        return response
+        return super().form_valid(form)
 
 class logout(LoginRequiredMixin, LogoutView):
     template_name = 'catalog/logout.html'
@@ -46,28 +40,10 @@ class RegisterUserView(CreateView):
     model = AdvUser
     template_name = 'catalog/register_user.html'
     form_class = RegisterUserForm
-    success_url = reverse_lazy('catalog:login')
-
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.is_active = False
-        user.is_activated = False
-        user.save()
-
-        self.request.session['registration_message'] = 'Вы успешно зарегистрированы! Ожидайте активации от администратора.'
-
-        return super().form_valid(form)
+    success_url = reverse_lazy('catalog:register_done')
 
 class RegisterDoneView(TemplateView):
     template_name = 'catalog/register_done.html'
-
-def activate_user(request, user_id):
-    user = get_object_or_404(AdvUser, id=user_id)
-    user.is_activated = True
-    user.is_active = True
-    user.save()
-    messages.success(request, f'Пользователь {user.username} успешно активирован!')
-    return redirect('admin:index')
 
 def create_request(request):
     if request.user.is_staff:
@@ -85,6 +61,10 @@ def create_request(request):
     if request.method == 'POST':
         form = InteriorDesignRequestForm(request.POST, request.FILES)
         if form.is_valid():
+            is_urgent = form.cleaned_data.get('is_urgent', False)
+            if is_urgent and InteriorDesignRequest.objects.filter(user=request.user, is_urgent=True).exists():
+                messages.error(request, "Вы уже создали срочную заявку.")
+                return redirect('catalog:create_requests')
             request_instance = form.save(commit=False)
             request_instance.user = request.user
             request_instance.category = form.cleaned_data['new_category'] or form.cleaned_data['category']
