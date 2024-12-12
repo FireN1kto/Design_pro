@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.db.transaction import commit
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
@@ -16,6 +18,7 @@ def index(request):
         requests = []
     return render(request, 'catalog/index.html', {'requests': requests})
 
+@login_required
 def profile(request):
     user_requests = InteriorDesignRequest.objects.filter(user=request.user)
     return render(request, 'catalog/profile.html', {'user_requests': user_requests})
@@ -26,12 +29,7 @@ class login(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         user.status = 'online'
-        user.is_activated = True
         user.save()
-
-        if 'registration_message' in self.request.session:
-            messages.success(self.request, self.request.session['registration_message'])
-            del self.request.session['registration_message']
         return super().form_valid(form)
 
 class logout(LoginRequiredMixin, LogoutView):
@@ -42,17 +40,7 @@ class RegisterUserView(CreateView):
     model = AdvUser
     template_name = 'catalog/register_user.html'
     form_class = RegisterUserForm
-    success_url = reverse_lazy('catalog:login')
-
-    def form_valid(self, form):
-        user = form.save()
-        user.is_active = False
-        user.is_activated = True
-        user.save()
-
-        self.request.session['registration_message'] = 'Вы успешно зарегистрированы!'
-
-        return super().form_valid(form)
+    success_url = reverse_lazy('catalog:register_done')
 
 class RegisterDoneView(TemplateView):
     template_name = 'catalog/register_done.html'
@@ -73,6 +61,10 @@ def create_request(request):
     if request.method == 'POST':
         form = InteriorDesignRequestForm(request.POST, request.FILES)
         if form.is_valid():
+            is_urgent = form.cleaned_data.get('is_urgent', False)
+            if is_urgent and InteriorDesignRequest.objects.filter(user=request.user, is_urgent=True).exists():
+                messages.error(request, "Вы уже создали срочную заявку.")
+                return redirect('catalog:create_requests')
             request_instance = form.save(commit=False)
             request_instance.user = request.user
             request_instance.category = form.cleaned_data['new_category'] or form.cleaned_data['category']

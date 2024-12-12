@@ -3,7 +3,6 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from .models import AdvUser, InteriorDesignRequest, Category
 from .validators import validate_cyrillic
-from django.contrib.auth.forms import AuthenticationForm
 
 from .models import user_registrated
 
@@ -27,16 +26,16 @@ class RegisterUserForm(forms.ModelForm):
             errors = {'password2': ValidationError('Введенные пароли не совпадают', code='password_mismatch')}
             raise ValidationError(errors)
 
-    def save(self, commit=False):
-        user = super().save()
+    def save(self, commit=True):
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        user.is_active = False
+        user.is_active = True
         user.is_activated = True
         user.login = self.cleaned_data['login']
         user.full_name = self.cleaned_data['full_name']
         if commit:
             user.save()
-            user_registrated.send(RegisterUserForm, instance=user)
+        user_registrated.send(RegisterUserForm, instance=user)
         return user
 
     class Meta:
@@ -45,10 +44,11 @@ class RegisterUserForm(forms.ModelForm):
 
 class InteriorDesignRequestForm(forms.ModelForm):
     new_category = forms.CharField(max_length=100, required=False, label="Категория")
+    is_urgent = forms.BooleanField(required=False, label='Срочность')
 
     class Meta:
         model = InteriorDesignRequest
-        fields = ['name','email', 'phone', 'project_description', 'design_image', 'new_category']
+        fields = ['name','email', 'phone', 'project_description', 'design_image', 'new_category', 'is_urgent']
         widgets = {
             'project_description': forms.Textarea(attrs={'rows': 4}),
         }
@@ -69,8 +69,3 @@ class InteriorDesignRequestForm(forms.ModelForm):
                 raise ValidationError('Неподдерживаемый формат файла. Используйте jpg, jpeg, png или bmp.')
             return image
         raise forms.ValidationError("Необходимо загрузить изображение.")
-
-class CustomLoginForm(AuthenticationForm):
-    class Meta:
-        model = AdvUser
-        fields = ('username', 'password')
